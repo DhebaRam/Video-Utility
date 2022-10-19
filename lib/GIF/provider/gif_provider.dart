@@ -1,29 +1,23 @@
-import 'dart:io';
-import 'dart:typed_data';
+import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:video_utility/utils/permission_utils.dart';
 
-import 'package:flutter/material.dart';
-import 'package:image/image.dart' as IMG;
-import 'package:image/image.dart';
-import 'package:video_utility/GIF/screen/images_to_gif.dart';
+class GIFProvider extends ChangeNotifier{
+  int previewImageIndex = 0;
+  late List<Image> images;
 
+  List<XFile> cameraImages=[];
+  List<XFile>? cameraVideo;
+  final ImagePicker picker = ImagePicker();
 
-class HomeProvider extends ChangeNotifier {
-  final JpegDecoder decoder = JpegDecoder();
-
-
-  // void decodeImages(Uint8List data){
-  //   gifProvider.images.add(decoder.decodeImage(data));
-  // }
-
-/*Future<dynamic> openCameraImages() async {
+  Future<dynamic> openCameraImages() async {
     // XFile file;
     if (await PermissionUtils().requestPermission(Permission.storage) &&
-            await PermissionUtils().requestPermission(Permission
-                .accessMediaLocation) */
-  /*&&
+        await PermissionUtils().requestPermission(Permission
+            .accessMediaLocation) /*&&
             await _requestPermission(Permission.manageExternalStorage)*/
-  /*
-        ) {
+    ) {
       XFile? file = await picker.pickImage(source: ImageSource.camera);
       if (file!.path.isNotEmpty) {
         return file;
@@ -55,5 +49,20 @@ class HomeProvider extends ChangeNotifier {
             .requestPermission(Permission.accessMediaLocation)) {
       // cameraVideo = await picker.pickVideo(source: ImageSource.gallery);
     }
-  }*/
+  }
+
+  void previewImageSet(index) {
+    previewImageIndex = index;
+    notifyListeners();
+  }
+
+  List<int>? generateGIF(List images) {
+    return null;
+
+    // final Animation animation = Animation();
+    // for(Image image in images) {
+    //   animation.addFrame(image);
+    // }
+    // return encodeGifAnimation(animation);
+  }
 }

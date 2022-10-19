@@ -60,6 +60,7 @@ const smallIconSize = 20.0;
 
 //Container Size
 const containerHeigth = 115.0;
+const containerWidth = 100.0;
 
 //Sized Box Size
 const smallWidth = 20.0;

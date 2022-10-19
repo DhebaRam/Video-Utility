@@ -1,11 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:video_utility/home/provider/home_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:video_utility/GIF/screen/preview_camera_gif_images.dart';
 import 'package:video_utility/utils/app_colors.dart';
 import 'package:video_utility/utils/dimens.dart';
 
+import '../GIF/provider/gif_provider.dart';
 import 'app_images.dart';
 import 'get_it.dart';
-final homeProvider = getIt<HomeProvider>();
+
+final gifProvider = getIt<GIFProvider>();
+
 class ShowBottomSheets {
   showBottomSheets(BuildContext context, String galleryType) {
     return showModalBottomSheet(
@@ -39,11 +46,24 @@ class ShowBottomSheets {
                           child: InkWell(
                             onTap: () {
                               // CreateDir().createDirectory();
-                              if(galleryType == "Video"){
-                                homeProvider.openCameraVideo();
-                              }else if(galleryType == "Image"){
-                                homeProvider.openCameraImages();
-                                Navigator.of(context).pop();
+                              if (galleryType == "Video") {
+                                gifProvider.openCameraVideos();
+                              } else if (galleryType == "Image") {
+                                // Navigator.of(context).pop();
+                                gifProvider
+                                    .openCameraImages()
+                                    .then((value) async {
+                                  if (value.runtimeType == XFile) {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                PreviewCameraImages(value)));
+                                  } else {
+                                    print("objec111t");
+                                  }
+                                  // Navigator.of(context).pop();
+                                  // XFile? cameraImage=value;
+                                });
                               }
                             },
                             child: Container(
@@ -79,6 +99,12 @@ class ShowBottomSheets {
                         Expanded(
                           child: InkWell(
                             onTap: () {
+                              if (galleryType == "Video") {
+                                gifProvider.openGalleryVideos();
+                              } else if (galleryType == "Image") {
+                                gifProvider.openGalleryImages();
+                                Navigator.of(context).pop();
+                              }
                               // homeProvider.openCameraImages();
                             },
                             child: Container(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:video_utility/splash_screen.dart';
-import 'package:get_it/get_it.dart';
-import 'package:video_utility/utils/get_it.dart';
+ import 'package:video_utility/utils/get_it.dart';
+import 'GIF/provider/gif_provider.dart';
 import 'home/provider/home_provider.dart';
 
 void main() {
@@ -20,12 +20,14 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   late HomeProvider _homeProvider;
+  late GIFProvider _gifProvider;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _homeProvider = getIt<HomeProvider>();
+    _gifProvider = getIt<GIFProvider>();
   }
 
   @override
@@ -33,6 +35,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => _homeProvider),
+          ChangeNotifierProvider(create: (_) => _gifProvider),
         ],
         child: MaterialApp(
           theme: ThemeData(
