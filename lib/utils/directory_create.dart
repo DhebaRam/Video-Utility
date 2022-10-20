@@ -22,7 +22,8 @@ class CreateDir {
     return false;
   }*/
 
-  createDirectory() async {
+  Future<bool?> createDirectory() async {
+    print("Method call");
     try {
       if (Platform.isAndroid) {
         if (await PermissionUtils().requestPermission(Permission.storage) &&
@@ -59,6 +60,7 @@ class CreateDir {
               List<String> folderName = ["Audio", "GIF", "Image", "Video"];
               for (int i = 0; i < folderName.length; i++) {
                 String newFolder = "$newSubPath/${folderName[i]}";
+                ConsoleLogUtils.printLog("Folder Path.... $newFolder");
                 directory = Directory(newFolder);
                 if (!await directory!.exists()) {
                   await directory!.create(recursive: true);
@@ -67,6 +69,7 @@ class CreateDir {
               break;
             }
           }
+          return true;
         }
       } else if (Platform.isIOS) {
         if (await PermissionUtils().requestPermission(Permission.storage)) {
@@ -89,10 +92,15 @@ class CreateDir {
           return false;
         }
       } else {
-        return null;
+        return false;
       }
     } catch (e) {
       ConsoleLogUtils.printLog(e.toString());
     }
+    return false;
+  }
+
+  saveGIF(){
+
   }
 }

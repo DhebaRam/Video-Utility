@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -5,10 +6,10 @@ import 'package:video_utility/utils/permission_utils.dart';
 
 class GIFProvider extends ChangeNotifier{
   int previewImageIndex = 0;
-  late List<Image> images;
+  List images=[];
 
   List<XFile> cameraImages=[];
-  List<XFile>? cameraVideo;
+  XFile? cameraVideo;
   final ImagePicker picker = ImagePicker();
 
   Future<dynamic> openCameraImages() async {
@@ -35,20 +36,27 @@ class GIFProvider extends ChangeNotifier{
     }
   }
 
-  void openCameraVideos() async {
+  Future<dynamic> openCameraVideos() async {
     if (await PermissionUtils().requestPermission(Permission.storage) &&
         await PermissionUtils()
             .requestPermission(Permission.accessMediaLocation)) {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.video,
+        allowCompression: false,
+      );
       // cameraVideo = await picker.pickVideo(source: ImageSource.camera);
+      return result;
     }
+
   }
 
   void openGalleryVideos() async {
     if (await PermissionUtils().requestPermission(Permission.storage) &&
         await PermissionUtils()
             .requestPermission(Permission.accessMediaLocation)) {
-      // cameraVideo = await picker.pickVideo(source: ImageSource.gallery);
+      cameraVideo = await picker.pickVideo(source: ImageSource.gallery);
     }
+    return null;
   }
 
   void previewImageSet(index) {

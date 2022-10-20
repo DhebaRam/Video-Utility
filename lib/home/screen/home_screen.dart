@@ -58,8 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                CreateDir().createDirectory();
-                                ShowBottomSheets().showBottomSheets(context,"Video");
+                                CreateDir().createDirectory().then((value) =>
+                                    value!
+                                        ? ShowBottomSheets()
+                                            .showBottomSheets(context, "Video")
+                                        : null);
                               },
                               child: Container(
                                 height: containerHeigth,
@@ -84,8 +87,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           Expanded(
                             child: InkWell(
                               onTap: () {
-                                CreateDir().createDirectory();
-                                ShowBottomSheets().showBottomSheets(context,"Image");
+                                CreateDir().createDirectory().then((value) =>
+                                    value!
+                                        ? ShowBottomSheets()
+                                            .showBottomSheets(context, "Image")
+                                        : null);
                               },
                               child: Container(
                                 height: containerHeigth,

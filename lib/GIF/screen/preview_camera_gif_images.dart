@@ -50,20 +50,22 @@ class PreviewCameraImages extends StatelessWidget {
               children: [
                 TextButton(
                     onPressed: () async {
-                      final List images = [];
-                      Uint8List? data;
+                      // final List images = [];
+                      // Uint8List? data;
                       final jpg.JpegDecoder decoder = jpg.JpegDecoder();
                       gifProvider.cameraImages.add(image!);
                       for (var imgFile in gifProvider.cameraImages) {
-                         data =  await imgFile.readAsBytes();
-                        //homeProvider.decodeImages(data);
-                        images.add(decoder.decodeImage(data));
-
-
+                        Uint8List data =  await imgFile.readAsBytes();
+                        // homeProvider.decodeImages(data);
+                        // images.add(decoder.decodeAnimation(data));
+                        gifProvider.images.add(decoder.decodeImage(await imgFile.readAsBytes()));
                       }
-                      // List<int>? gifData = generateGIF(images);
-                      // Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      //     builder: (context) => const ImagesToGIF()));
+                      var gifData = generateGIF(gifProvider.images);
+                      // print("object.... ${gifData!.first.runtimeType}");
+                      // print("object.... ${gifData.length}");
+                      // print("object.... ${decoder.decodeImage(images)}");
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => ImagesToGIF(gifData)));
                     },
                     child: Text("Done", style: regularTextStyle)),
                 TextButton(
@@ -100,17 +102,20 @@ class PreviewCameraImages extends StatelessWidget {
     );
   }
 
-  // List<int>? generateGIF(Iterable<Image> images) {
-  //   // Animation<dynamic> a=Animate;
-  //   List<Animation<dynamic>> scaleAnimations;
-  //
-  //   anim.Animation animate = anim.Animation();
-  //   for(Image image in images) {
-  //    // animate.addFrame(image.image);
-  //     // animation.addFrame(image);
-  //   }
-  //   return encodeImage.encodeGifAnimation(animation);
-  // }
+  List<dynamic>? generateGIF(Iterable<dynamic> images) {
+    // Animation<dynamic> a=Animate;
+    // List<Animation<dynamic>> scaleAnimations;
+
+    anim.Animation animation = anim.Animation();
+    for(var image in images) {
+      animation.addFrame(image);
+      // animation.addFrame(image);
+    }
+
+    print("animation... ${animation.length}");
+    // encodeImage.encodeGifAnimation(animation)
+    return encodeImage.encodeGif(animation.first);
+  }
 }
 
 

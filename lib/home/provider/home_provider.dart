@@ -3,16 +3,25 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as IMG;
-import 'package:image/image.dart';
+import 'package:image/image.dart' as DEC;
+import 'package:image/image.dart' as CPY;
+// import 'package:image/image.dart';
 import 'package:video_utility/GIF/screen/images_to_gif.dart';
 
 
 class HomeProvider extends ChangeNotifier {
-  final JpegDecoder decoder = JpegDecoder();
+  final IMG.JpegDecoder decoder = IMG.JpegDecoder();
 
 
   // void decodeImages(Uint8List data){
-  //   gifProvider.images.add(decoder.decodeImage(data));
+  //   // gifProvider.images.add(decoder.decodeImage(data));
+  //   var image = DEC.decodeJpg(File.fromRawPath(data).readAsBytesSync());
+  //
+  //   // Resize the image to a 120x? thumbnail (maintaining the aspect ratio).
+  //   var thumbnail = CPY.copyResize(image!, width: 120);
+  //
+  //   // Save the thumbnail as a PNG.
+  //   File.fromRawPath(data).writeAsBytesSync(DEC.encodeGif(image));
   // }
 
 /*Future<dynamic> openCameraImages() async {

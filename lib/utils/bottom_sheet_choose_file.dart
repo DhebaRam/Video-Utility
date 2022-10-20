@@ -1,13 +1,16 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
 import 'package:video_utility/GIF/screen/preview_camera_gif_images.dart';
 import 'package:video_utility/utils/app_colors.dart';
+import 'package:video_utility/utils/console_log_utils.dart';
 import 'package:video_utility/utils/dimens.dart';
 
 import '../GIF/provider/gif_provider.dart';
+import '../GIF/screen/video_to_gif.dart';
 import 'app_images.dart';
 import 'get_it.dart';
 
@@ -47,7 +50,15 @@ class ShowBottomSheets {
                             onTap: () {
                               // CreateDir().createDirectory();
                               if (galleryType == "Video") {
-                                gifProvider.openCameraVideos();
+                                gifProvider.openCameraVideos().then((value) async{
+                                  print("v.. ${value.runtimeType}");
+                                  if(value.runtimeType == FilePickerResult){
+                                    File file = File(value.files.single.path!);
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> VideoToGIF(file: file)));
+                                  }else{
+                                    ConsoleLogUtils.printLog("Video Not Get Camera... ");
+                                  }
+                                });
                               } else if (galleryType == "Image") {
                                 // Navigator.of(context).pop();
                                 gifProvider

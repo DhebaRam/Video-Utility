@@ -11,7 +11,10 @@ import '../../utils/get_it.dart';
 
 final gifProvider = getIt<GIFProvider>();
 class ImagesToGIF extends StatelessWidget {
-  const ImagesToGIF({Key? key}) : super(key: key);
+  List<dynamic>? gifData;
+  // imageGen.Image? decodeImage;
+  // List<dynamic> images;
+  ImagesToGIF(this.gifData, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
