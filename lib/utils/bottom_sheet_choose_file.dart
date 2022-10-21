@@ -52,8 +52,8 @@ class ShowBottomSheets {
                               if (galleryType == "Video") {
                                 gifProvider.openCameraVideos().then((value) async{
                                   print("v.. ${value.runtimeType}");
-                                  if(value.runtimeType == FilePickerResult){
-                                    File file = File(value.files.single.path!);
+                                  if(value.runtimeType == XFile){
+                                    File file = File(value.path);
                                     Navigator.of(context).push(MaterialPageRoute(builder: (context)=> VideoToGIF(file: file)));
                                   }else{
                                     ConsoleLogUtils.printLog("Video Not Get Camera... ");
@@ -111,7 +111,15 @@ class ShowBottomSheets {
                           child: InkWell(
                             onTap: () {
                               if (galleryType == "Video") {
-                                gifProvider.openGalleryVideos();
+                                gifProvider.openGalleryVideos().then((value) async{
+                                  print("v.. ${value.runtimeType}");
+                                  if(value.runtimeType == FilePickerResult){
+                                    File file = File(value.files.single.path!);
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> VideoToGIF(file: file)));
+                                  }else{
+                                    ConsoleLogUtils.printLog("Video Not Get Camera... ");
+                                  }
+                                });
                               } else if (galleryType == "Image") {
                                 gifProvider.openGalleryImages();
                                 Navigator.of(context).pop();

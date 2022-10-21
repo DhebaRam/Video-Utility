@@ -4,21 +4,21 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:video_utility/utils/permission_utils.dart';
 
-class GIFProvider extends ChangeNotifier{
+class GIFProvider extends ChangeNotifier {
   int previewImageIndex = 0;
-  List images=[];
+  List images = [];
 
-  List<XFile> cameraImages=[];
+  List<XFile> cameraImages = [];
   XFile? cameraVideo;
   final ImagePicker picker = ImagePicker();
 
   Future<dynamic> openCameraImages() async {
     // XFile file;
     if (await PermissionUtils().requestPermission(Permission.storage) &&
-        await PermissionUtils().requestPermission(Permission
-            .accessMediaLocation) /*&&
+            await PermissionUtils().requestPermission(Permission
+                .accessMediaLocation) /*&&
             await _requestPermission(Permission.manageExternalStorage)*/
-    ) {
+        ) {
       XFile? file = await picker.pickImage(source: ImageSource.camera);
       if (file!.path.isNotEmpty) {
         return file;
@@ -36,7 +36,7 @@ class GIFProvider extends ChangeNotifier{
     }
   }
 
-  Future<dynamic> openCameraVideos() async {
+  Future<dynamic> openGalleryVideos() async{
     if (await PermissionUtils().requestPermission(Permission.storage) &&
         await PermissionUtils()
             .requestPermission(Permission.accessMediaLocation)) {
@@ -47,14 +47,14 @@ class GIFProvider extends ChangeNotifier{
       // cameraVideo = await picker.pickVideo(source: ImageSource.camera);
       return result;
     }
-
   }
 
-  void openGalleryVideos() async {
+  Future<dynamic> openCameraVideos() async {
     if (await PermissionUtils().requestPermission(Permission.storage) &&
         await PermissionUtils()
             .requestPermission(Permission.accessMediaLocation)) {
-      cameraVideo = await picker.pickVideo(source: ImageSource.gallery);
+      cameraVideo = await picker.pickVideo(source: ImageSource.camera);
+      return cameraVideo;
     }
     return null;
   }

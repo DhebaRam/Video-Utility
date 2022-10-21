@@ -5,7 +5,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_trimmer/video_trimmer.dart';
 
 import '../../utils/app_colors.dart';
-import '../../utils/dimens.dart';
 
 class VideoToGIF extends StatefulWidget {
   final File file;
@@ -17,22 +16,22 @@ class VideoToGIF extends StatefulWidget {
 }
 
 class _VideoToGIFState extends State<VideoToGIF> {
-  final Trimmer _trimmer = Trimmer();
+  final Trimmer trimmer = Trimmer();
   double _startValue = 0.0;
   double _endValue = 0.0;
   bool _isPlaying = false;
   bool zoom = false;
 
   // trimmerVideo() async{
-  //   await _trimmer.videPlaybackControl(
+  //   await trimmer.videPlaybackControl(
   //     startValue: 0,
   //     endValue: 10,
   //   );
   // }
   void _loadVideo() {
-    _trimmer.loadVideo(videoFile: widget.file);
+    trimmer.loadVideo(videoFile: widget.file);
     setState(() {
-      print("Duration ${_trimmer.videoPlayerController!.value.isPlaying}");
+      print("Duration ${trimmer.videoPlayerController!.value.isPlaying}");
     });
   }
 
@@ -60,7 +59,7 @@ class _VideoToGIFState extends State<VideoToGIF> {
           Expanded(
             flex: zoom ? 6 : 8,
             child: Container(
-                color: AppColor.white, child: VideoViewer(trimmer: _trimmer)),
+                color: AppColor.white, child: VideoViewer(trimmer: trimmer)),
           ),
           zoom
               ? const Text("")
@@ -88,19 +87,21 @@ class _VideoToGIFState extends State<VideoToGIF> {
                                 ),
                           onPressed: () async {
                             bool playbackState =
-                                await _trimmer.videPlaybackControl(
+                                await trimmer.videPlaybackControl(
                               startValue: _startValue,
                               endValue: _endValue,
                             );
                             setState(() {
-                              print("Duration ${_trimmer.videoPlayerController!.value.duration.inSeconds}");
+                              print(
+                                  "Duration ${trimmer.videoPlayerController!.value.duration.inSeconds}");
                               _isPlaying = playbackState;
                             });
                           },
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text("${_trimmer.videoPlayerController!.value.position.inSeconds}"),
+                          child: Text(
+                              "${trimmer.videoPlayerController!.value.position.inSeconds}"),
                         ),
                         Expanded(
                           child: TrimEditor(
@@ -116,30 +117,32 @@ class _VideoToGIFState extends State<VideoToGIF> {
                             sideTapSize: 24,
                             durationTextStyle:
                                 const TextStyle(color: Colors.white),
-                            trimmer: _trimmer,
+                            trimmer: trimmer,
                             // viewerHeight: 60.0,
                             // viewerWidth: MediaQuery.of(context).size.width / 1.5,
                             // maxVideoLength: Duration(seconds: _endValue.toInt()),
                             onChangeStart: (value) {
                               setState(() {
-                              _startValue = value / 1000;
+                                _startValue = value / 1000;
                               });
                             },
                             onChangeEnd: (value) {
                               setState(() {
-                              _endValue = value / 1000;
+                                _endValue = value / 1000;
                               });
                             },
                             onChangePlaybackState: (value) {
                               setState(() {
-                                print("Duration ${_trimmer.videoPlayerController!.value.position.inSeconds}");
+                                print(
+                                    "Duration ${trimmer.videoPlayerController!.value.position.inSeconds}");
                                 print("onChangePlaybackState $value");
-                              _isPlaying = value;
+                                _isPlaying = value;
                               });
                             },
                           ),
                         ),
-                        Text("${_trimmer.videoPlayerController!.value.duration.inSeconds}")
+                        Text(
+                            "${trimmer.videoPlayerController!.value.duration.inSeconds}")
                       ],
                     ),
                   ),
@@ -155,7 +158,6 @@ class _VideoToGIFState extends State<VideoToGIF> {
           Directory? directory = await getExternalStorageDirectory();
 
           String newPath = "";
-          String newSubPath = "";
           List<String> paths = directory!.path.split("/");
           for (int x = 1; x < paths.length; x++) {
             String folder = paths[x];
@@ -165,11 +167,35 @@ class _VideoToGIFState extends State<VideoToGIF> {
               newPath = "$newPath/Video Converter";
               directory = Directory(newPath);
               if (!await directory.exists()) {
-                await directory!.create(recursive: true);
+                await directory.create(recursive: true);
               }
               break;
             }
           }
+
+          print("PAth... ${trimmer.currentVideoFile!.path}");
+
+          await trimmer.saveTrimmedVideo(
+              startValue: _startValue,
+              endValue: _endValue,
+              ffmpegCommand:
+                  '-vf "fps=10,scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0',
+              // customVideoFormat: '.gif',
+              videoFileName: "/storage/emulated/0/Video Converter/GIF/djkf.gif}",
+              storageDir: StorageDir.externalStorageDirectory,
+
+              onSave: (String? outputPath) {
+                File("/storage/emulated/0/Video Converter/GIF$outputPath")
+                    .writeAsBytes(trimmer.currentVideoFile!.readAsBytesSync());
+
+                // ByteData bytes = ByteData.view(url.buffer);
+                // final buffer = trimmer.currentVideoFile!.readAsBytes();
+                // File("/storage/emulated/0/Video Converter/GIF/abc.gif").writeAsBytes(trimmer.currentVideoFile!.readAsBytesSync());
+                // File("/storage/emulated/0/Video Converter/GIF/$outputPath}");
+                // print("outpath $outputPath");
+              });
+          // File("/storage/emulated/0/Video Converter/GIF/abc.gif")
+          //     .writeAsBytes(trimmer.currentVideoFile!.readAsBytesSync());
         },
         backgroundColor: AppColor.colorPrimary,
         child: const Icon(
